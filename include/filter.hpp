@@ -1,23 +1,23 @@
-#ifndef SMOOTHING_HPP
-#define SMOOTHING_HPP
+#ifndef FILTER_HPP
+#define FILTER_HPP
 
 #include <vector>
 
 template <typename T>
-class Smoother {
+class Filter {
  public:
-  virtual void smooth(const T data_in, T& data_out) = 0;
+  virtual void filter(const T data_in, T& data_out) = 0;
   virtual void reset() = 0;
   virtual void set_filter_size(const int size) = 0;
 };
 
 template <typename T>
-class ExponentialSmoother : public Smoother<T> {
+class ExponentialFilter : public Filter<T> {
  public:
-  ExponentialSmoother(const T filter_constant)
+  ExponentialFilter(const T filter_constant)
       : _filter_constant{filter_constant} {}
 
-  virtual void smooth(const T data_in, T& data_out) override {
+  virtual void filter(const T data_in, T& data_out) override {
     _filtered_data =
         _filter_constant * (_filtered_data) + (1 - _filter_constant) * data_in;
     data_out = _filtered_data;
@@ -32,18 +32,18 @@ class ExponentialSmoother : public Smoother<T> {
 };
 
 template <typename T>
-class MovingAverageSmoother : public Smoother<T> {
+class MovingAverageFilter : public Filter<T> {
  public:
   // CONSTRUCTORS **************************************************************
-  MovingAverageSmoother(const int filter_size) : _filter_size{filter_size} {
+  MovingAverageFilter(const int filter_size) : _filter_size{filter_size} {
     _data.resize(_filter_size);
   }
 
-  MovingAverageSmoother(const int call_frequency, const int filter_period)
-      : MovingAverageSmoother{filter_period * call_frequency} {}
+  MovingAverageFilter(const int call_frequency, const int filter_period)
+      : MovingAverageFilter{filter_period * call_frequency} {}
 
   // FILTERING FUNCTIONS *******************************************************
-  virtual void smooth(const T data_in, T& data_out) override {
+  virtual void filter(const T data_in, T& data_out) override {
     int ind{circular_ind(_filter_ind++)};
 
     _filter_sum = _filter_sum - _data[ind] + data_in;
