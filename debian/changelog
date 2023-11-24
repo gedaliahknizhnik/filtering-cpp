@@ -1,5 +1,6 @@
-smoothing (0.1.0) UNRELEASED; urgency=medium
+filtering (0.1.0) jammy; urgency=medium
 
-  * Initial release.
+  * Initial release, support for exponential and moving average filter for
+    single data stream.
 
--- Gedaliah Knizhnik <gedaliah.knizhnik@gmail.com>  Fri, 24 Nov 2023 09:18:33 -0500
+ -- Gedaliah Knizhnik <gedaliah.knizhnik@gmail.com>  Fri, 24 Nov 2023 13:21:45 -0500
