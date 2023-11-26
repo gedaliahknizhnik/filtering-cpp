@@ -1,8 +1,8 @@
-filtering (0.2.0) UNRELEASED; urgency=medium
+filtering (0.2.0) jammy; urgency=medium
 
   * Improving CMake setup for install/uninstall.
 
- -- Gedaliah Knizhnik <gedaliah.knizhnik@gmail.com>  Sat, 25 Nov 2023 19:18:26 -0500
+ -- Gedaliah Knizhnik <gedaliah.knizhnik@gmail.com>  Sat, 25 Nov 2023 20:04:44 -0500
 
 filtering (0.1.0) jammy; urgency=medium
 
