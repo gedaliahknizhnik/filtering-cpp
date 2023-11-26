@@ -1,3 +1,13 @@
+/**
+ * @file filter.hpp
+ * @author Gedaliah Knizhnik (gedaliah.knizhnik@gmail.com)
+ * @brief Filters for incoming data streams
+ * @version 0.1
+ * @date 2023-11-25
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 #ifndef FILTER_HPP
 #define FILTER_HPP
 
@@ -178,7 +188,7 @@ class MovingAverageFilter : public Filter<T> {
   int _filter_size{};      ///< Size of the internal data vector
 
   T _filter_sum{0};    ///< Running sum of the entries in the data vector
-  int _filter_ind{0};  ///< Index at which we're entering the data
+  int _filter_ind{0};  ///< Index at which we're entering the
 };
 
 #endif
