@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(smoothing)
+project(filtering)
 set(CMAKE_CXX_STANDARD 17)
 
 set(PROJECT_VERSION 0.1.0)
@@ -15,7 +15,7 @@ include_directories(include ${Python3_INCLUDE_DIRS})
 add_library(filtering INTERFACE) # Define the library target
 
 target_include_directories(filtering INTERFACE 
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -46,7 +46,7 @@ install(EXPORT filteringTargets DESTINATION lib/cmake/filtering)
 install(FILES "${PROJECT_BINARY_DIR}/filteringConfigVersion.cmake"
               "${PROJECT_BINARY_DIR}/filteringConfig.cmake"
         DESTINATION lib/cmake/filtering)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION include)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME} DESTINATION include)
 
 
 ## EXAMPLES ####################################################################
