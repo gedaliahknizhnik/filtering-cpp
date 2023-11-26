@@ -2,11 +2,57 @@ cmake_minimum_required(VERSION 3.13)
 project(smoothing)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package (Python3 COMPONENTS Interpreter Development)
+set(PROJECT_VERSION 0.1.0)
 
+## MATPLOTLIB ##################################################################
+
+# Find Python interpreter for Matplotlib
+find_package (Python3 COMPONENTS Interpreter Development)
 include_directories(include ${Python3_INCLUDE_DIRS})
 
+## FILTERS #####################################################################
+
+add_library(filtering INTERFACE) # Define the library target
+
+target_include_directories(filtering INTERFACE 
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${PROJECT_BINARY_DIR}/filteringConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion ARCH_INDEPENDENT
+)
+
+install(TARGETS filtering
+    EXPORT filteringTargets
+    LIBRARY DESTINATION lib COMPONENT Runtime
+    ARCHIVE DESTINATION lib COMPONENT Development
+    RUNTIME DESTINATION bin COMPONENT Runtime
+    PUBLIC_HEADER DESTINATION include COMPONENT Development
+    BUNDLE DESTINATION bin COMPONENT Runtime
+)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    "${PROJECT_SOURCE_DIR}/cmake/filteringConfig.cmake.in"
+    "${PROJECT_BINARY_DIR}/filteringConfig.cmake"
+    INSTALL_DESTINATION lib/cmake/filtering
+)
+
+install(EXPORT filteringTargets DESTINATION lib/cmake/filtering)
+install(FILES "${PROJECT_BINARY_DIR}/filteringConfigVersion.cmake"
+              "${PROJECT_BINARY_DIR}/filteringConfig.cmake"
+        DESTINATION lib/cmake/filtering)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION include)
+
+
+## EXAMPLES ####################################################################
+
 add_executable(example src/smoothing_example.cpp)
+target_link_libraries(example filtering)
 
 add_executable(example_plot src/plotting_example.cpp)
-target_link_libraries(example_plot Python3::Python)
+target_link_libraries(example_plot filtering Python3::Python)

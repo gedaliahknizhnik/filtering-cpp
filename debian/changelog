@@ -1,3 +1,9 @@
+filtering (0.2.0) UNRELEASED; urgency=medium
+
+  * Improving CMake setup for install/uninstall.
+
+ -- Gedaliah Knizhnik <gedaliah.knizhnik@gmail.com>  Sat, 25 Nov 2023 19:18:26 -0500
+
 filtering (0.1.0) jammy; urgency=medium
 
   * Initial release, support for exponential and moving average filter for
