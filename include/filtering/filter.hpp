@@ -1,6 +1,18 @@
+/**
+ * @file filter.hpp
+ * @author Gedaliah Knizhnik (gedaliah.knizhnik@gmail.com)
+ * @brief Filters for incoming data streams
+ * @version 0.2
+ * @date 2023-11-25
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 #ifndef FILTER_HPP
 #define FILTER_HPP
 
+#include <memory>
+#include <string>
 #include <vector>
 
 // ABSTRACT FILTER CLASS *******************************************************
@@ -13,6 +25,12 @@
 template <typename T>
 class Filter {
  public:
+  /**
+   * @brief Destroy the Filter object
+   *
+   */
+  virtual ~Filter() {}
+
   /**
    * @brief Primary filter function for each filter
    *
@@ -31,6 +49,13 @@ class Filter {
    * @param size - how many data points does the filter consider?
    */
   virtual void set_filter_size(const int size) = 0;
+
+  /**
+   * @brief Return a unique pointer to allow creating multi-filter objects
+   *
+   * @return std::unique_ptr<Filter<T>>
+   */
+  virtual std::unique_ptr<Filter<T>> clone() const = 0;
 };
 
 // EXPONENTIAL FILTER **********************************************************
@@ -82,6 +107,14 @@ class ExponentialFilter : public Filter<T> {
    * @param size - the size of the filter
    */
   virtual void set_filter_size(const int size) override { return; };
+  /**
+   * @brief Return a cast pointer to Filter<T> for creating multi-filter objects
+   *
+   * @return std::unique_ptr<Filter<T>>
+   */
+  virtual std::unique_ptr<Filter<T>> clone() const override {
+    return std::make_unique<ExponentialFilter<T>>(*this);
+  }
 
  private:
   // VARIABLES *****************************************************************
@@ -160,6 +193,15 @@ class MovingAverageFilter : public Filter<T> {
     reset();
   };
 
+  /**
+   * @brief Return a cast pointer to Filter<T> for creating multi-filter objects
+   *
+   * @return std::unique_ptr<Filter<T>>
+   */
+  virtual std::unique_ptr<Filter<T>> clone() const override {
+    return std::make_unique<MovingAverageFilter<T>>(*this);
+  }
+
  private:
   // PRIVATE SUPPORT FUNCTIONS *************************************************
 
@@ -178,7 +220,7 @@ class MovingAverageFilter : public Filter<T> {
   int _filter_size{};      ///< Size of the internal data vector
 
   T _filter_sum{0};    ///< Running sum of the entries in the data vector
-  int _filter_ind{0};  ///< Index at which we're entering the data
+  int _filter_ind{0};  ///< Index at which we're entering the
 };
 
 #endif
