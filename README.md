@@ -8,6 +8,6 @@ A header-only CPP smoothing library for incoming data streams. Currently the fol
 1. Exponential filter
 2. Moving average filter.
 
-Future plans involve conan-izing this library for installation and inclusion, but for the time being simply include `filter.hpp`.
+Multi-stream filtering is supported via the `multistream.hpp` header, and supports all of the above filters.
 
-Future plans also include adding multiple data streams. 
+Future plans involve conan-izing this library for installation and inclusion, but for the time being simply include `filter.hpp` and `multistream.hpp`.
