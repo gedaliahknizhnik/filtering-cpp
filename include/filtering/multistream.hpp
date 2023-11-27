@@ -78,7 +78,7 @@ class MultiStreamFilter {
    */
   virtual void set_filter_size(const int size) {
     for (auto& _filter : _filters) {
-      _filter->set_size(size);
+      _filter->set_filter_size(size);
     }
   };
 
