@@ -51,8 +51,11 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME} DESTINATION incl
 
 ## EXAMPLES ####################################################################
 
-add_executable(example src/smoothing_example.cpp)
+add_executable(example src/example_filtering.cpp)
 target_link_libraries(example filtering)
 
-add_executable(example_plot src/plotting_example.cpp)
+add_executable(example_plot src/example_plotting.cpp)
 target_link_libraries(example_plot filtering Python3::Python)
+
+add_executable(example_multi src/example_multi.cpp)
+target_link_libraries(example_multi filtering Python3::Python)
