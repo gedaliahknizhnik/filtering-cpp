@@ -11,6 +11,7 @@
 #ifndef FILTER_HPP
 #define FILTER_HPP
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -48,7 +49,13 @@ class Filter {
    * @param size - how many data points does the filter consider?
    */
   virtual void set_filter_size(const int size) = 0;
-  virtual std::string get_type() { return "Abstract"; }
+
+  /**
+   * @brief Return a unique pointer to allow creating multi-filter objects
+   *
+   * @return std::unique_ptr<Filter<T>>
+   */
+  virtual std::unique_ptr<Filter<T>> clone() const = 0;
 };
 
 // EXPONENTIAL FILTER **********************************************************
@@ -100,8 +107,14 @@ class ExponentialFilter : public Filter<T> {
    * @param size - the size of the filter
    */
   virtual void set_filter_size(const int size) override { return; };
-
-  virtual std::string get_type() override { return "Exponential"; }
+  /**
+   * @brief Return a cast pointer to Filter<T> for creating multi-filter objects
+   *
+   * @return std::unique_ptr<Filter<T>>
+   */
+  virtual std::unique_ptr<Filter<T>> clone() const override {
+    return std::make_unique<ExponentialFilter<T>>(*this);
+  }
 
  private:
   // VARIABLES *****************************************************************
@@ -180,7 +193,14 @@ class MovingAverageFilter : public Filter<T> {
     reset();
   };
 
-  virtual std::string get_type() override { return "Moving Average"; }
+  /**
+   * @brief Return a cast pointer to Filter<T> for creating multi-filter objects
+   *
+   * @return std::unique_ptr<Filter<T>>
+   */
+  virtual std::unique_ptr<Filter<T>> clone() const override {
+    return std::make_unique<MovingAverageFilter<T>>(*this);
+  }
 
  private:
   // PRIVATE SUPPORT FUNCTIONS *************************************************
