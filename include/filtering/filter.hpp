@@ -2,7 +2,7 @@
  * @file filter.hpp
  * @author Gedaliah Knizhnik (gedaliah.knizhnik@gmail.com)
  * @brief Filters for incoming data streams
- * @version 0.1
+ * @version 0.2
  * @date 2023-11-25
  *
  * @copyright Copyright (c) 2023

@@ -2,7 +2,7 @@
  * @file multistream.hpp
  * @author Gedaliah Knizhnik (gedaliah.knizhnik@gmail.com)
  * @brief Filter multi-stream data streams
- * @version 0.1
+ * @version 0.2
  * @date 2023-11-27
  *
  * @copyright Copyright (c) 2023
