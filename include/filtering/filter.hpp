@@ -11,6 +11,7 @@
 #ifndef FILTER_HPP
 #define FILTER_HPP
 
+#include <string>
 #include <vector>
 
 // ABSTRACT FILTER CLASS *******************************************************
@@ -23,6 +24,12 @@
 template <typename T>
 class Filter {
  public:
+  /**
+   * @brief Destroy the Filter object
+   *
+   */
+  virtual ~Filter() {}
+
   /**
    * @brief Primary filter function for each filter
    *
@@ -41,6 +48,7 @@ class Filter {
    * @param size - how many data points does the filter consider?
    */
   virtual void set_filter_size(const int size) = 0;
+  virtual std::string get_type() { return "Abstract"; }
 };
 
 // EXPONENTIAL FILTER **********************************************************
@@ -92,6 +100,8 @@ class ExponentialFilter : public Filter<T> {
    * @param size - the size of the filter
    */
   virtual void set_filter_size(const int size) override { return; };
+
+  virtual std::string get_type() override { return "Exponential"; }
 
  private:
   // VARIABLES *****************************************************************
@@ -169,6 +179,8 @@ class MovingAverageFilter : public Filter<T> {
 
     reset();
   };
+
+  virtual std::string get_type() override { return "Moving Average"; }
 
  private:
   // PRIVATE SUPPORT FUNCTIONS *************************************************
