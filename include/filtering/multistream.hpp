@@ -48,7 +48,8 @@ class MultiStreamFilter {
   }
 
   /**
-   * @brief Construct a new Multi Stream Filter object from an array of filters
+   * @brief Construct a new Multi Stream Filter object from an array of
+   * filters
    *
    * @param filters - a std::array of unique_ptrs to filters.
    */
