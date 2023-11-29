@@ -47,6 +47,17 @@ class MultiStreamFilter {
     }
   }
 
+  /**
+   * @brief Construct a new Multi Stream Filter object from an array of filters
+   *
+   * @param filters - a std::array of unique_ptrs to filters.
+   */
+  MultiStreamFilter(std::array<std::unique_ptr<Filter<T>>, N> filters) {
+    for (int ii{0}; ii < N; ++ii) {
+      _filters[ii] = std::move(filters[ii]);
+    }
+  }
+
   // FILTER FUNCTIONS **********************************************************
 
   /**
