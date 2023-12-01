@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(PROJECT_VERSION 0.1.0)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 ## MATPLOTLIB ##################################################################
 
 # Find Python interpreter for Matplotlib

@@ -12,7 +12,6 @@
 #define FILTER_HPP
 
 #include <memory>
-#include <string>
 #include <vector>
 
 // ABSTRACT FILTER CLASS *******************************************************
@@ -186,7 +185,7 @@ class MovingAverageFilter : public Filter<T> {
    *
    * @param size
    */
-  virtual void set_filter_size(const int size) {
+  virtual void set_filter_size(const int size) override {
     _filter_size = size;
     _data.resize(_filter_size);
 
