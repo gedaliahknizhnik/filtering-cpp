@@ -88,7 +88,7 @@ class ExponentialFilter : public Filter<T> {
    */
   virtual void filter(const T data_in, T& data_out) override {
     _filtered_data =
-        _filter_constant * (_filtered_data) + (1 - _filter_constant) * data_in;
+        _filter_constant * data_in + (1 - _filter_constant) * _filtered_data;
     data_out = _filtered_data;
   }
 
@@ -220,6 +220,30 @@ class MovingAverageFilter : public Filter<T> {
 
   T _filter_sum{0};    ///< Running sum of the entries in the data vector
   int _filter_ind{0};  ///< Index at which we're entering the
+};
+
+/**
+ * @brief A discrete implementation of a low-pass filter.
+ *
+ * This is exactly the same as the basic ExponentialFilter defined above. We
+ * simply define an RC constructor for it.
+ *
+ * @tparam T - the data type used by the filter
+ */
+template <typename T>
+class LowPassFilter : public ExponentialFilter<T> {
+ public:
+  // CONSTRUCTORS **************************************************************
+
+  /**
+   * @brief Create a LowPassFilter as an RC circuit visualisation.
+   *
+   * @tparam T - the filter type used by the filter
+   * @param R - the resistance value
+   * @param C - the capacitance value
+   * @param dt - the sampling interval
+   */
+  LowPassFilter(T R, T C, T dt) : ExponentialFilter<T>{dt / (R * C + dt)} {};
 };
 
 #endif
