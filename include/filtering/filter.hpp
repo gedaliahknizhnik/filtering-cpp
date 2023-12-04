@@ -12,6 +12,7 @@
 #define FILTER_HPP
 
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 // ABSTRACT FILTER CLASS *******************************************************
@@ -63,7 +64,7 @@ class Filter {
  * @brief Exponential Filter
  *
  * The most basic type of filter, in which (for x in and y out):
- *    y[k] = a*y[k-1] + (1-a)*x[k]
+ *    y[k] = (1-a)*y[k-1] + a*x[k]
  *
  * @tparam T - data type used by the filter
  */
@@ -78,7 +79,11 @@ class ExponentialFilter : public Filter<T> {
    * @param filter_constant - constant used in the filter
    */
   ExponentialFilter(const T filter_constant)
-      : _filter_constant{filter_constant} {}
+      : _filter_constant{filter_constant} {
+    if ((_filter_constant <= 0) || (_filter_constant > 1)) {
+      throw std::domain_error("Filter constant must be in the range (0, 1]");
+    }
+  }
 
   /**
    * @brief Apply the filter to a new input data point
@@ -88,7 +93,7 @@ class ExponentialFilter : public Filter<T> {
    */
   virtual void filter(const T data_in, T& data_out) override {
     _filtered_data =
-        _filter_constant * (_filtered_data) + (1 - _filter_constant) * data_in;
+        _filter_constant * data_in + (1 - _filter_constant) * _filtered_data;
     data_out = _filtered_data;
   }
 
@@ -115,7 +120,7 @@ class ExponentialFilter : public Filter<T> {
     return std::make_unique<ExponentialFilter<T>>(*this);
   }
 
- private:
+ protected:
   // VARIABLES *****************************************************************
   T _filter_constant;
   T _filtered_data{0};
@@ -220,6 +225,102 @@ class MovingAverageFilter : public Filter<T> {
 
   T _filter_sum{0};    ///< Running sum of the entries in the data vector
   int _filter_ind{0};  ///< Index at which we're entering the
+};
+
+/**
+ * @brief A discrete implementation of a low-pass filter.
+ *
+ * This is exactly the same as the basic ExponentialFilter defined above. We
+ * simply define an RC constructor for it.
+ *
+ * @tparam T - the data type used by the filter
+ */
+template <typename T>
+class LowPassFilter : public ExponentialFilter<T> {
+ public:
+  // CONSTRUCTORS **************************************************************
+
+  /**
+   * @brief Create a LowPassFilter object using a filter constant
+   *
+   * @param filter_constant - the proportion of decay for incoming data
+   */
+  LowPassFilter(T filter_constant) : ExponentialFilter<T>{filter_constant} {};
+  /**
+   * @brief Create a LowPassFilter visualized as an RC circuit. @overload
+   *
+   * @param RC - the product of the resistance and capacitance
+   * @param dt - the sampling interval
+   */
+  LowPassFilter(T RC, T dt) : ExponentialFilter<T>{dt / (RC + dt)} {};
+  /**
+   * @brief Create a LowPassFilter visualized as an RC circuit. @overload
+   *
+   * @param R - the resistance value
+   * @param C - the capacitance value
+   * @param dt - the sampling interval
+   */
+  LowPassFilter(T R, T C, T dt) : LowPassFilter{R * C, dt} {};
+};
+
+/**
+ * @brief A discrete implementation of a high-pass filter.
+ *
+ * This is a modified ExponentialFilter as defined above. We define an RC
+ * constructor and modify the filter method.
+ *
+ * A high pass filter is implemented as:
+ *  y[k] = alpha*y[k-1] + alpha*(x[k] - x[k-1])
+ *
+ * @tparam T - the data type used by the filter
+ */
+template <typename T>
+class HighPassFilter : public ExponentialFilter<T> {
+  using ExponentialFilter<T>::_filter_constant;  ///< Gives access to protected
+                                                 ///< member
+  using ExponentialFilter<T>::_filtered_data;    ///< Gives access to protected
+                                                 ///< member
+
+ public:
+  // CONSTRUCTORS **************************************************************
+
+  /**
+   * @brief Create a HighPassFilter oject using a filter constant
+   *
+   * @param filter_constant - the proportion of decay for the data
+   */
+  HighPassFilter(T filter_constant) : ExponentialFilter<T>{filter_constant} {};
+  /**
+   * @brief Create a HighPassFilter visualized as an RC circuit. @overload
+   *
+   * @param RC - the product of the resistance and capacticance
+   * @param dt - the sampling interval
+   */
+  HighPassFilter(T RC, T dt) : ExponentialFilter<T>{RC / (RC + dt)} {};
+  /**
+   * @brief Create a HighPassFilter visualized as an RC circuit. @overload
+   *
+   * @param R - the resistance value
+   * @param C - the capacitance value
+   * @param dt - the sampling interval
+   */
+  HighPassFilter(T R, T C, T dt) : HighPassFilter(R * C, dt){};
+
+  /**
+   * @brief Filter the data coming in
+   *
+   * @param data_in - the newest data point input to the filter
+   * @param data_out - reference to where to put the output filtered data.
+   */
+  virtual void filter(const T data_in, T& data_out) override {
+    _filtered_data = _filter_constant * _filtered_data +
+                     _filter_constant * (data_in - _last_data);
+    _last_data = data_in;
+    data_out = _filtered_data;
+  }
+
+ private:
+  T _last_data;
 };
 
 #endif

@@ -1,3 +1,10 @@
+filtering (0.5.0) jammy; urgency=medium
+
+  * Added high and low pass filtering.
+  * Added error checking on exponential filter.
+
+ -- Gedaliah Knizhnik <gedaliah.knizhnik@gmail.com>  Mon, 04 Dec 2023 13:28:42 -0500
+
 filtering (0.4.0) jammy; urgency=medium
 
   * Adding additional constructor for the multi-stream filter.

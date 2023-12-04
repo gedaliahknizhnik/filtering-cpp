@@ -8,6 +8,8 @@ int main(int argc, char *argv[]) { /* ... */
   //   Filter<double> s{}; // Not allowed bc abstract class
   MovingAverageFilter<double> s{100};
   ExponentialFilter<double> e{0.1};
+  // ExponentialFilter<double> e1{1.1};  // Should throw an exception.
+
   double out_m{0};
   double out_e{0};
   while (true) {
