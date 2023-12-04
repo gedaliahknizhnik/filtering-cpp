@@ -238,11 +238,18 @@ class LowPassFilter : public ExponentialFilter<T> {
   /**
    * @brief Create a LowPassFilter visualized as an RC circuit.
    *
+   * @param RC - the product of the resistance and capacitance
+   * @param dt - the sampling interval
+   */
+  LowPassFilter(T RC, T dt) : ExponentialFilter<T>{dt / (RC + dt)} {};
+  /**
+   * @brief Create a LowPassFilter visualized as an RC circuit. @overload
+   *
    * @param R - the resistance value
    * @param C - the capacitance value
    * @param dt - the sampling interval
    */
-  LowPassFilter(T R, T C, T dt) : ExponentialFilter<T>{dt / (R * C + dt)} {};
+  LowPassFilter(T R, T C, T dt) : LowPassFilter{R * C, dt} {};
 };
 
 /**
@@ -267,14 +274,20 @@ class HighPassFilter : public ExponentialFilter<T> {
   // CONSTRUCTORS **************************************************************
 
   /**
-   * @brief Create HighPassFilter visualized as an RC circuit.
+   * @brief Create a HighPassFilter visualized as an RC circuit.
+   *
+   * @param RC - the product of the resistance and capacticance
+   * @param dt - the sampling interval
+   */
+  HighPassFilter(T RC, T dt) : ExponentialFilter<T>{RC / (RC + dt)} {};
+  /**
+   * @brief Create a HighPassFilter visualized as an RC circuit.
    *
    * @param R - the resistance value
    * @param C - the capacitance value
    * @param dt - the sampling interval
    */
-  HighPassFilter(T R, T C, T dt)
-      : ExponentialFilter<T>{R * C / (R * C + dt)} {};
+  HighPassFilter(T R, T C, T dt) : HighPassFilter(R * C, dt){};
 
   /**
    * @brief Filter the data coming in
