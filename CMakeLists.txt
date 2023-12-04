@@ -61,3 +61,6 @@ target_link_libraries(example_plot filtering Python3::Python)
 
 add_executable(example_multi src/example_multi.cpp)
 target_link_libraries(example_multi filtering Python3::Python)
+
+add_executable(example_highlowpass src/example_high_low_pass.cpp)
+target_link_libraries(example_highlowpass filtering Python3::Python)
