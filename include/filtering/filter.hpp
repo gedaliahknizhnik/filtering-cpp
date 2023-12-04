@@ -63,7 +63,7 @@ class Filter {
  * @brief Exponential Filter
  *
  * The most basic type of filter, in which (for x in and y out):
- *    y[k] = a*y[k-1] + (1-a)*x[k]
+ *    y[k] = (1-a)*y[k-1] + a*x[k]
  *
  * @tparam T - data type used by the filter
  */
@@ -115,7 +115,7 @@ class ExponentialFilter : public Filter<T> {
     return std::make_unique<ExponentialFilter<T>>(*this);
   }
 
- private:
+ protected:
   // VARIABLES *****************************************************************
   T _filter_constant;
   T _filtered_data{0};
@@ -236,14 +236,61 @@ class LowPassFilter : public ExponentialFilter<T> {
   // CONSTRUCTORS **************************************************************
 
   /**
-   * @brief Create a LowPassFilter as an RC circuit visualisation.
+   * @brief Create a LowPassFilter visualized as an RC circuit.
    *
-   * @tparam T - the filter type used by the filter
    * @param R - the resistance value
    * @param C - the capacitance value
    * @param dt - the sampling interval
    */
   LowPassFilter(T R, T C, T dt) : ExponentialFilter<T>{dt / (R * C + dt)} {};
+};
+
+/**
+ * @brief A discrete implementation of a high-pass filter.
+ *
+ * This is a modified ExponentialFilter as defined above. We define an RC
+ * constructor and modify the filter method.
+ *
+ * A high pass filter is implemented as:
+ *  y[k] = alpha*y[k-1] + alpha*(x[k] - x[k-1])
+ *
+ * @tparam T - the data type used by the filter
+ */
+template <typename T>
+class HighPassFilter : public ExponentialFilter<T> {
+  using ExponentialFilter<T>::_filter_constant;  ///< Gives access to protected
+                                                 ///< member
+  using ExponentialFilter<T>::_filtered_data;    ///< Gives access to protected
+                                                 ///< member
+
+ public:
+  // CONSTRUCTORS **************************************************************
+
+  /**
+   * @brief Create HighPassFilter visualized as an RC circuit.
+   *
+   * @param R - the resistance value
+   * @param C - the capacitance value
+   * @param dt - the sampling interval
+   */
+  HighPassFilter(T R, T C, T dt)
+      : ExponentialFilter<T>{R * C / (R * C + dt)} {};
+
+  /**
+   * @brief Filter the data coming in
+   *
+   * @param data_in - the newest data point input to the filter
+   * @param data_out - reference to where to put the output filtered data.
+   */
+  virtual void filter(const T data_in, T& data_out) override {
+    _filtered_data = _filter_constant * _filtered_data +
+                     _filter_constant * (data_in - _last_data);
+    _last_data = data_in;
+    data_out = _filtered_data;
+  }
+
+ private:
+  T _last_data;
 };
 
 #endif
