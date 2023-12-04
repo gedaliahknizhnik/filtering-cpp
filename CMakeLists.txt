@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(PROJECT_VERSION 0.1.0)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 ## MATPLOTLIB ##################################################################
 
 # Find Python interpreter for Matplotlib
@@ -59,3 +61,6 @@ target_link_libraries(example_plot filtering Python3::Python)
 
 add_executable(example_multi src/example_multi.cpp)
 target_link_libraries(example_multi filtering Python3::Python)
+
+add_executable(example_highlowpass src/example_high_low_pass.cpp)
+target_link_libraries(example_highlowpass filtering Python3::Python)

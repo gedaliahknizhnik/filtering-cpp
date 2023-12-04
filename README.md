@@ -1,12 +1,14 @@
-# smoothing-cpp
+# filtering-cpp
 
 **Maintainer**: Gedaliah Knizhnik - <gedaliah.knizhnik@gmail.com>
 
 ---
-A header-only CPP smoothing library for incoming data streams. Currently the following filters are supported:
+A header-only CPP filtering library for incoming data streams. Currently the following filters are supported:
 
-1. Exponential filter
+1. Exponential filter.
 2. Moving average filter.
+3. Low Pass filter.
+4. High Pass filter.
 
 Multi-stream filtering is supported via the `multistream.hpp` header, and supports all of the above filters.
 

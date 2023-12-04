@@ -1,6 +1,4 @@
 #include <cmath>
-#include <iostream>
-#include <iterator>
 #include <random>
 
 #include "matplotlibcpp.h"
