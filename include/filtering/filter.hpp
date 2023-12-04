@@ -241,7 +241,13 @@ class LowPassFilter : public ExponentialFilter<T> {
   // CONSTRUCTORS **************************************************************
 
   /**
-   * @brief Create a LowPassFilter visualized as an RC circuit.
+   * @brief Create a LowPassFilter object using a filter constant
+   *
+   * @param filter_constant - the proportion of decay for incoming data
+   */
+  LowPassFilter(T filter_constant) : ExponentialFilter<T>{filter_constant} {};
+  /**
+   * @brief Create a LowPassFilter visualized as an RC circuit. @overload
    *
    * @param RC - the product of the resistance and capacitance
    * @param dt - the sampling interval
@@ -279,14 +285,20 @@ class HighPassFilter : public ExponentialFilter<T> {
   // CONSTRUCTORS **************************************************************
 
   /**
-   * @brief Create a HighPassFilter visualized as an RC circuit.
+   * @brief Create a HighPassFilter oject using a filter constant
+   *
+   * @param filter_constant - the proportion of decay for the data
+   */
+  HighPassFilter(T filter_constant) : ExponentialFilter<T>{filter_constant} {};
+  /**
+   * @brief Create a HighPassFilter visualized as an RC circuit. @overload
    *
    * @param RC - the product of the resistance and capacticance
    * @param dt - the sampling interval
    */
   HighPassFilter(T RC, T dt) : ExponentialFilter<T>{RC / (RC + dt)} {};
   /**
-   * @brief Create a HighPassFilter visualized as an RC circuit.
+   * @brief Create a HighPassFilter visualized as an RC circuit. @overload
    *
    * @param R - the resistance value
    * @param C - the capacitance value
