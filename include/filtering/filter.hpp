@@ -12,6 +12,7 @@
 #define FILTER_HPP
 
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 // ABSTRACT FILTER CLASS *******************************************************
@@ -78,7 +79,11 @@ class ExponentialFilter : public Filter<T> {
    * @param filter_constant - constant used in the filter
    */
   ExponentialFilter(const T filter_constant)
-      : _filter_constant{filter_constant} {}
+      : _filter_constant{filter_constant} {
+    if ((_filter_constant <= 0) || (_filter_constant > 1)) {
+      throw std::domain_error("Filter constant must be in the range (0, 1]");
+    }
+  }
 
   /**
    * @brief Apply the filter to a new input data point
