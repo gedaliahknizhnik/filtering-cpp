@@ -6,11 +6,16 @@ set(PROJECT_VERSION 0.1.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-## MATPLOTLIB ##################################################################
+## MATPLOTLIB ####################################################################
 
 # Find Python interpreter for Matplotlib
 find_package (Python3 COMPONENTS Interpreter Development)
-include_directories(include ${Python3_INCLUDE_DIRS})
+include_directories(include external ${Python3_INCLUDE_DIRS})
+
+file(DOWNLOAD
+  https://raw.githubusercontent.com/lava/matplotlib-cpp/master/matplotlibcpp.h
+  ${CMAKE_SOURCE_DIR}/external/matplotlibcpp.h
+)
 
 ## FILTERS #####################################################################
 
@@ -49,7 +54,6 @@ install(FILES "${PROJECT_BINARY_DIR}/filteringConfigVersion.cmake"
               "${PROJECT_BINARY_DIR}/filteringConfig.cmake"
         DESTINATION lib/cmake/filtering)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME} DESTINATION include)
-
 
 ## EXAMPLES ####################################################################
 
