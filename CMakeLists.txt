@@ -12,10 +12,17 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package (Python3 COMPONENTS Interpreter Development)
 include_directories(include external ${Python3_INCLUDE_DIRS})
 
-file(DOWNLOAD
-  https://raw.githubusercontent.com/lava/matplotlib-cpp/master/matplotlibcpp.h
-  ${CMAKE_SOURCE_DIR}/external/matplotlibcpp.h
-)
+set(matplotlib-file ${CMAKE_SOURCE_DIR}/external/matplotlibcpp.h)
+
+if(NOT EXISTS "${matplotlib-file}")
+  message("-- Downloading the matplotlibcpp.h header file from github")
+  file(DOWNLOAD
+    https://raw.githubusercontent.com/lava/matplotlib-cpp/master/matplotlibcpp.h
+    ${matplotlib-file}
+  )
+else()
+  message("-- Found matplotlibcpp.h header locally.")
+endif()
 
 ## FILTERS #####################################################################
 
